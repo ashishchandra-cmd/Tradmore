@@ -22,4 +22,9 @@ urlpatterns = [
     path('customer_register/',views.CustomerRegister.as_view({'post':'create'})),
     path('login_check/',views.Login_check.as_view({'post':'create'})),
     path('logout_check/',views.Logout_check.as_view({'get':'list'})),
+
+    path('newcustomer_register/',views.CustomerRegist.as_view({'post':'create'})),
+    path('login/',views.Login.as_view({'post':'create'})),
+
+
 ]

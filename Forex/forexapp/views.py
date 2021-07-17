@@ -78,3 +78,54 @@ class Logout_check(ViewSet):
         logout(request)
         response_data = {'response_code':200,'comments':'logout is successful',"status": True}
         return Response(response_data) 
+
+
+
+
+class Login(ViewSet):
+    def create(self,request):
+        data=request.data
+        username1=data.get('phone')
+        password1=data.get('password')
+        if username1=='' or password1=='':
+            response_data = {'response_code':200,'comments':'all fields is required',"status": False}
+            return Response(response_data)
+        user1=authenticate(username=username1,password=password1)
+        if user1 is not None:
+            user_det=User.objects.get(username=username1)
+            sending_data=[]
+            userdata={'id':user_det.id,'phone':user_det.username,'fullname':user_det.first_name}
+            sending_data.append(userdata)
+            response_data = {'user_data':sending_data,'response_code':200,'comments':'login',"status": True}
+            return Response(response_data)     
+        else:
+            response_data = {'response_code':200,'comments':'fill currect phone and password',"status": False}
+            return Response(response_data)
+
+
+class CustomerRegist(ViewSet):
+    def create(self,request):
+        data=request.data
+        username1=data.get("phone")
+        password1=data.get("password")
+        fname=data.get("fullname")
+        # print(username1,password1,phone1)
+        if username1=='' or password1=='' or fname=='':
+            response_data = {'response_code':200,'comments':'all fields is required',"status": False}
+            return Response(response_data)
+        try:
+            user1=User(username=username1,password=make_password(password1),first_name=fname)
+            user1.save()
+            user_inst=User.objects.get(username=username1)#instance
+            sending_data=[]
+            userdata={'id':user_inst.id,'phone':user_inst.username,'fullname':user_inst.first_name}
+            sending_data.append(userdata)
+            response_data = {'user_data':sending_data,'response_code':200,'comments':'register is succeefull',"status": True}
+            return Response(response_data)
+        except :
+            user_inst=User.objects.get(username=username1)#instance
+            sending_data=[]
+            userdata={'id':user_inst.id,'phone':user_inst.username,'fullname':user_inst.first_name}
+            sending_data.append(userdata)
+            response_data = {'user_data':sending_data,'response_code':200,'comments':'All ready created',"status": False}
+        return Response(response_data)
