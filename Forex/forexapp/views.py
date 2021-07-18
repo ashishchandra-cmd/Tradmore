@@ -129,3 +129,17 @@ class CustomerRegist(ViewSet):
             sending_data.append(userdata)
             response_data = {'user_data':sending_data,'response_code':200,'comments':'All ready created',"status": False}
         return Response(response_data)
+
+    def list(self,request):
+        user_obj=User.objects.all()
+        if user_obj:
+            dat_dict={}
+            data_list=[]
+            for x in user_obj:
+                dat_dict={'user_id':x.id,'user_phone':x.username,'user_name':x.first_name}
+                data_list.append(dat_dict)
+            user_dict={"user_details":data_list,'response_code':200,'comments':'all list of user',"status": True}
+            return Response(user_dict)
+        else:
+            user_dict={'response_code':200,'comments':'no details of user',"status": False}
+            return Response(user_dict)
